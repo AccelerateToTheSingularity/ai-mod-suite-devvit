@@ -1,0 +1,43 @@
+# Dependencies / builds
+node_modules/
+dist/
+build/
+.devvit/
+.next/
+.cache/
+coverage/
+
+# Secrets and env files
+.env
+.env.*
+*.pem
+*.key
+*secret*
+*secrets*
+*credential*
+*credentials*
+*token*
+*tokens*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Private project material that must never be published
+bounty/
+private/
+submission/
+screenshots/
+messages/
+emails/
+devpost/
+*.eml

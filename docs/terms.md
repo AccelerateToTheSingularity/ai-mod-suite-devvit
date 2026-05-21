@@ -1,0 +1,37 @@
+# AI Mod Suite Terms and Conditions
+
+Effective date: 2026-05-21
+
+AI Mod Suite is a Reddit Developer Platform app that provides AI-assisted moderation and community helper features.
+
+## Use of the app
+
+The app is intended for subreddit moderators and communities that want configurable assistance with summaries, replies, flair signals, moderation triage, and audit logs.
+
+The app should be used in accordance with Reddit's terms, Reddit Developer Platform rules, and the rules of each subreddit where it is installed.
+
+## AI-generated output
+
+AI-generated summaries, replies, classifications, and moderation suggestions may be incomplete or incorrect.
+
+Moderators are responsible for configuring the app appropriately for their communities and reviewing outputs where needed.
+
+## Moderation actions
+
+The app supports configurable action modes. Conservative modes such as Safe Mode, audit-only, report, or modmail escalation are intended for testing and review.
+
+Any stronger action mode, such as content removal, should be enabled deliberately by subreddit moderators.
+
+The app does not provide or enable live ban automation by default.
+
+## Availability
+
+The app may fail, timeout, or produce no action if Reddit services, Devvit services, or the configured AI provider are unavailable.
+
+## Changes
+
+These terms may be updated as the app evolves.
+
+## Contact
+
+For questions or support, contact the developer through the app listing or the moderation team of the subreddit where the app is installed.
