@@ -39,8 +39,12 @@ The following locations are **not** sources for direct copy into this repo:
 
 | Location | Role |
 |----------|------|
-| Private bounty/planning workspace | Planning, strategy, submission drafts — never publish |
-| Private Devvit development app | Active development — import only after audit |
-| Legacy Python/PRAW reference bot | Historical reference — not part of this release |
+| `C:\Programming\reddit_mod_bot_bounty` | Private bounty/planning workspace — planning, strategy, submission drafts — never publish |
+| `C:\Programming\reddit_mod_bot_bounty\devvit-port` | **Active private Devvit build** — import audited app code here when ready for public release |
+| `C:\Programming\reddit_mod_bot` | Legacy Python/PRAW reference bot — historical reference — not part of this release |
+
+## This repo's role
+
+**`C:\Programming\ai-mod-suite-devvit`** is the **public GitHub Pages and public-release staging repo**. Published policy URLs and (later) the finished Devvit app package live here. Private development stays in `reddit_mod_bot_bounty\devvit-port` until import.
 
 When importing later, copy only audited, public-safe artifacts from the finished Devvit build. Do not bulk-copy directories from private workspaces.
