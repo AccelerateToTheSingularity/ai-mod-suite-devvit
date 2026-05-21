@@ -1,3 +1,8 @@
+---
+title: AI Mod Suite Privacy Policy
+permalink: /privacy/
+---
+
 # AI Mod Suite Privacy Policy
 
 Effective date: 2026-05-21
@@ -6,7 +11,7 @@ AI Mod Suite is a Reddit Developer Platform app for subreddit moderation assista
 
 ## What the app processes
 
-When installed in a subreddit, the app may process Reddit posts, comments, usernames, subreddit names, post/comment IDs, moderation status, and related metadata needed to provide moderation features.
+When installed in a subreddit, the app may process Reddit posts, comments, usernames, subreddit names, post/comment IDs, moderation status, and related metadata as needed to provide moderation features.
 
 Depending on moderator settings, the app may process content for:
 
@@ -23,7 +28,7 @@ If AI features are enabled, selected post/comment text and relevant context may 
 
 The current intended provider is Google Gemini via `generativelanguage.googleapis.com`.
 
-The app does not send Reddit passwords or legacy Reddit OAuth client secrets to AI providers.
+The app does not collect Reddit passwords or legacy Reddit OAuth client secrets for Reddit actions. Those credentials are not sent to AI providers.
 
 ## Data stored by the app
 
@@ -40,7 +45,7 @@ The app avoids storing full post/comment bodies except where temporarily necessa
 
 ## Moderator control
 
-Moderators control which features are enabled for their subreddit.
+Moderators control which features are enabled for their subreddit and which action modes are active.
 
 Safe Mode and conservative action modes are intended to prevent unexpected live moderation actions. Stronger actions, such as content removal, require explicit moderator configuration.
 

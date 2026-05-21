@@ -17,21 +17,23 @@ For now, this repo contains public documentation and policy pages required for R
 | [Release Checklist](RELEASE_CHECKLIST.md) | Steps before importing and publishing the finished app |
 | [Publication Boundary](PUBLICATION_BOUNDARY.md) | What may and may not belong in this repo |
 
+## Public policy URLs
+
+Once GitHub Pages is enabled from `main` → `/docs`, the public URLs are:
+
+- Privacy Policy: https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/privacy/
+- Terms and Conditions: https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/terms/
+
+These are the URLs to use in the Reddit Developer Portal.
+
 ## GitHub Pages setup
 
-To host the policy pages for Reddit Developer Platform review:
+Repository Settings → Pages → Build and deployment
 
-1. Open the repository on GitHub → **Settings** → **Pages**
-2. **Source:** Deploy from a branch
-3. **Branch:** `main`
-4. **Folder:** `/docs`
-
-After deployment, the policy URLs should resolve to:
-
-- `https://<github-username>.github.io/<repo-name>/privacy/`
-- `https://<github-username>.github.io/<repo-name>/terms/`
-
-Use these URLs in the Reddit Developer Portal when submitting the app.
+- **Source:** Deploy from a branch
+- **Branch:** `main`
+- **Folder:** `/docs`
+- **Save**
 
 ## License
 
