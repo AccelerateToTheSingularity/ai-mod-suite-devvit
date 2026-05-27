@@ -33,27 +33,11 @@ Moderation load is often about how much context each item needs, not just queue 
 - Devvit Reddit API
 - Google Gemini or OpenAI ChatGPT via API (moderator-configured)
 
-## Public policy pages
+## Documentation
 
 - [Privacy Policy](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/privacy/)
 - [Terms and Conditions](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/terms/)
-
-Use these URLs in the Reddit Developer Portal app listing.
-
-## Repository status
-
-This repo is the **public GitHub Pages and release staging** home for AI Mod Suite. Published privacy and terms live under [`docs/`](docs/). Audited Devvit app source is imported from private development when ready; see [Publication Boundary](PUBLICATION_BOUNDARY.md) and [Release Checklist](RELEASE_CHECKLIST.md).
-
-| Document | Description |
-|----------|-------------|
-| [Privacy Policy](docs/privacy.md) | Data handling and AI providers |
-| [Terms](docs/terms.md) | Terms of use |
-| [Release Checklist](RELEASE_CHECKLIST.md) | Pre-import and publish steps |
-| [Publication Boundary](PUBLICATION_BOUNDARY.md) | What may not be published here |
-
-## Demo
-
-- Live judge/demo thread: [r/NetworkStates demo post](https://www.reddit.com/r/NetworkStates/comments/1toe0o9/ai_mod_suite_demo_thread_how_to_try_each_feature/)
+- [Live demo thread](https://www.reddit.com/r/NetworkStates/comments/1toe0o9/ai_mod_suite_demo_thread_how_to_try_each_feature/)
 
 ## License
 
