@@ -29,9 +29,11 @@ No server. Install from the [app listing](https://developers.reddit.com/apps/ai-
 
 ## Documentation
 
+- [Build and develop](docs/BUILD.md)
 - [Privacy Policy](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/privacy/)
 - [Terms and Conditions](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/terms/)
 - [Live demo thread](https://www.reddit.com/r/NetworkStates/comments/1toe0o9/ai_mod_suite_demo_thread_how_to_try_each_feature/)
+- [Source repository](https://github.com/AccelerateToTheSingularity/ai-mod-suite-devvit)
 
 ## License
 
