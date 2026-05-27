@@ -8,7 +8,6 @@ Use this checklist when the private Devvit app is complete and ready to import i
 - [ ] Confirm current app name/slug.
 - [ ] Confirm Devvit upload succeeds.
 - [ ] Confirm safe-mode baseline testing passes.
-- [ ] Confirm no live ban automation is present.
 - [ ] Confirm removal requires explicit moderator configuration.
 - [ ] Confirm LLM/fetch hostnames match docs and `devvit.json`.
 
@@ -39,6 +38,12 @@ Manual checks:
 - [ ] No bounty or submission drafts are present.
 - [ ] No personal contact details are accidentally included.
 - [ ] README and policy pages accurately describe the implemented app.
+
+## License and README
+
+- [x] `LICENSE` (AGPL-3.0) at repo root.
+- [x] README includes policy URLs, license, trademark/affiliation notice.
+- [ ] After app import: confirm README feature list matches shipped code.
 
 ## GitHub Pages
 

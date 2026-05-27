@@ -15,7 +15,7 @@ When installed in a subreddit, the app may process Reddit posts, comments, usern
 
 Depending on moderator settings, the app may process content for:
 
-- AI TLDR summaries of posts or comments
+- AI TLDR summaries of posts or comments (including optional crosspost/link reference TLDRs that load source Reddit content via the Reddit API)
 - Direct summon replies (for example: "hey bot", "mod bot", "ai bot", or `!bot`)
 - Comment-section discussion summaries
 - AI-assisted moderation review or classification
@@ -33,7 +33,7 @@ If AI features are enabled, selected post/comment text and relevant context may 
 
 This app does **not** support other LLM vendors (such as DeepSeek, Kimi, or self-hosted models). Those are not permitted under [Reddit Devvit LLM rules](https://developers.reddit.com/docs/devvit_rules#generative-aillm-rules).
 
-The installing moderator supplies the API key in app settings. The app does not collect Reddit passwords or legacy Reddit OAuth client secrets for Reddit actions.
+The installing moderator may supply an API key in per-subreddit Install Settings when AI features are enabled. That key is stored as app install configuration for the subreddit (not a Reddit account password and not a Reddit Devvit platform secret). The app does not collect Reddit passwords or legacy Reddit OAuth client secrets for Reddit actions.
 
 ## Data stored by the app
 
@@ -52,7 +52,7 @@ The app avoids storing full post/comment bodies except short, bounded audit snip
 
 Moderators control which features are enabled for their subreddit, which LLM provider is used, and which action modes are active.
 
-**Safe Mode** defaults to **on** and is intended to prevent unexpected live moderation actions. Stronger actions, such as content removal, require explicit moderator configuration. Live bans are not supported.
+**Safe Mode** defaults to **on** and is intended to prevent unexpected live moderation actions. Stronger actions, such as content removal, require explicit moderator configuration.
 
 ## Data sharing
 

@@ -15,7 +15,7 @@ The app is a Devvit-native port and product upgrade from an existing Reddit bot.
 - Reddit crosspost/link TLDRs for referenced Reddit threads.
 - Milestone-based discussion summaries.
 - Natural summon phrases like `hey bot`, `mod bot`, and `!bot`.
-- AI moderation triage with report, modmail, remove, or audit-only modes.
+- AI moderation triage that automatically evaluates every new post/comment when enabled, with report, modmail, remove, or audit-only modes.
 - AI contextual mod alerts for better moderator review.
 - Safe mode defaults and Redis-backed audit logs.
 - Local reputation flairs and specialist roles.
@@ -28,7 +28,6 @@ Moderation load is often about context, not queue size. AI Mod Suite compresses 
 
 - Safe mode defaults on.
 - Live removal requires an explicit moderator-selected action mode.
-- Live bans are not exposed.
 
 ## Links
 

@@ -1,85 +1,66 @@
 # AI Mod Suite for Devvit
 
-AI Mod Suite is a Devvit-native Reddit moderation assistant for communities with long posts, busy comment sections, repeated explanation requests, and context-heavy moderation decisions.
+The swiss-army-knife of AI mod tools for Devvit. It handles what normally takes four separate bots (rule enforcement, summarization, community engagement, and contributor recognition) in a single open-source install with no server.
 
-It began as a port of an existing PRAW/Data API moderation bot and has been redesigned as an installable Devvit app: no custom bot hosting, no legacy Reddit credential management, no polling loop, and no file-based state jobs.
+- **AI rule checks**: checks every new post and comment against the rules you write. Violations route to modqueue (report), mod inbox (modmail), or removal. Every flagged item includes an AI-written explanation: what rule matched, what happened, and what a human should verify.
+- **Post and comment TLDRs**: long posts and comments get an AI summary automatically.
+- **Reddit crosspost/link TLDRs**: when a post links to another Reddit thread, the app automatically summarizes the source.
+- **Discussion digests**: milestone-based digest posted and updated as a thread grows.
+- **AI summons**: `!bot`, `hey bot`, `mod bot` summons with bounded AI replies and optional follow-up conversations.
+- **Reputation flairs**: contribution milestone flairs and AI-assigned specialist labels like `Resource Finder`.
+- **Troll-alert modmail**: conservative early-warning modmail on low local scores.
+- **Safe mode on by default**: dry-run everything before live writes. Redis-backed audit logs, duplicate prevention, cooldowns, and milestone state.
 
-## What It Does
+No server. No credentials. Install from the [app listing](https://developers.reddit.com/apps/ai-mod-suite-bot), configure from subreddit app settings.
 
-- Summarizes long posts and comments with configurable AI TLDRs.
-- Optionally summarizes Reddit crossposts and reddit.com permalink posts by resolving source content through the Reddit API.
-- Creates milestone-based discussion summaries for busy threads.
-- Responds to direct community summons such as `hey bot`, `mod bot`, `ai bot`, and `!bot`.
-- Supports optional bounded conversational follow-ups.
-- Evaluates posts and comments against moderator-written rules.
-- Lets moderators choose report, modmail, remove, or audit-only action modes.
-- Adds AI contextual mod alerts that explain why an item needs review.
-- Defaults to safe mode so communities can dry-run behavior before live writes.
-- Tracks audit logs, idempotency, cooldowns, and milestones in Redis.
-- Awards local reputation flairs and specialist roles from community contribution patterns.
-- Sends conservative troll-alert modmail for strongly negative local participation patterns.
+## Why it matters
 
-## Why It Matters
+Moderation load is often about how much context each item needs, not just queue size. AI Mod Suite checks content against your rules, adds plain-language context on alerts, and summarizes long posts and busy threads so moderators and users spend less time reading and more time deciding.
 
-Moderators do not just need more automation. They need faster context, safer escalation, and tools they can trust.
-
-AI Mod Suite reduces the reading burden around long content and busy threads, gives moderators clearer explanations for AI-flagged items, and helps communities recognize constructive participation. It is built for staged adoption: install the app, configure the features you want, run in safe mode, review the audit trail, then enable live actions only when your mod team is ready.
-
-## Safety Model
+## Safety model
 
 - Safe mode defaults on.
-- Live removal requires an explicit moderator-selected action mode.
-- Live bans are not exposed.
-- AI moderation separates detection from action execution.
-- Audit logs record proposed and completed moderation activity.
+- Live removal requires explicit moderator opt-in with safe mode off.
+- Audit logs record proposed and completed actions.
 - Redis idempotency prevents duplicate trigger actions.
 
 ## Stack
 
 - Reddit Devvit
-- TypeScript / Hono server bundle
+- TypeScript / Hono
 - Devvit triggers and scheduler
 - Redis
 - Devvit Reddit API
-- Google Gemini or OpenAI ChatGPT, configured by moderators
+- Google Gemini or OpenAI ChatGPT via API (moderator-configured)
 
-## Reddit Developer App
+## Public policy pages
 
-- App listing: https://developers.reddit.com/apps/ai-mod-suite-bot
-
-## Current Status
-
-This repository is the **public GitHub Pages and release staging repo** for AI Mod Suite. Published privacy and terms pages live here; the audited Devvit app source will be imported after private development and release review are complete.
-
-This repo currently contains public documentation and policy pages. Runtime app code is developed in a private workspace and imported here only when ready for public release. See [Publication Boundary](PUBLICATION_BOUNDARY.md).
-
-## Documentation
-
-| Document | Description |
-|----------|-------------|
-| [Privacy Policy](docs/privacy.md) | How the app handles data and AI providers |
-| [Terms and Conditions](docs/terms.md) | Terms of use for the app |
-| [Release Checklist](RELEASE_CHECKLIST.md) | Steps before importing and publishing the finished app |
-| [Publication Boundary](PUBLICATION_BOUNDARY.md) | What may and may not belong in this repo |
-
-## Public Policy URLs
-
-GitHub Pages (branch `main`, folder `/docs`):
-
-- Privacy Policy: https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/privacy/
-- Terms and Conditions: https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/terms/
+- [Privacy Policy](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/privacy/)
+- [Terms and Conditions](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/terms/)
 
 Use these URLs in the Reddit Developer Portal app listing.
 
-## GitHub Pages Setup
+## Repository status
 
-Repository Settings → Pages → Build and deployment
+This repo is the **public GitHub Pages and release staging** home for AI Mod Suite. Published privacy and terms live under [`docs/`](docs/). Audited Devvit app source is imported from private development when ready; see [Publication Boundary](PUBLICATION_BOUNDARY.md) and [Release Checklist](RELEASE_CHECKLIST.md).
 
-- **Source:** Deploy from a branch
-- **Branch:** `main`
-- **Folder:** `/docs`
-- **Save**
+| Document | Description |
+|----------|-------------|
+| [Privacy Policy](docs/privacy.md) | Data handling and AI providers |
+| [Terms](docs/terms.md) | Terms of use |
+| [Release Checklist](RELEASE_CHECKLIST.md) | Pre-import and publish steps |
+| [Publication Boundary](PUBLICATION_BOUNDARY.md) | What may not be published here |
+
+## Demo
+
+- Live judge/demo thread: [r/NetworkStates demo post](https://www.reddit.com/r/NetworkStates/comments/1toe0o9/ai_mod_suite_demo_thread_how_to_try_each_feature/)
 
 ## License
 
-License file will be added when the final app package is imported and audited.
+Licensed under the [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0).
+
+## Trademark and affiliation
+
+**AI Mod Suite** is the project name for this software. Reddit, Devvit, and related marks are trademarks of their respective owners. This project is not affiliated with, endorsed by, or sponsored by Reddit, Inc.
+
+Forks and derivatives are welcome under the license terms. Using the name "AI Mod Suite" for an unrelated competing product may confuse users; maintainers of forks are encouraged to use a distinct name if their app is not the same project.

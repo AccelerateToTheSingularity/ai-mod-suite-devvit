@@ -19,6 +19,8 @@ The app should be used consistently with Reddit's terms, [Reddit Developer Platf
 
 AI-generated summaries, replies, classifications, and moderation suggestions may be incomplete or incorrect.
 
+Private moderator alerts (reports, modmail, and audit logs) may include AI-generated summaries explaining why an item was flagged or why a user was surfaced for review. These are assistive only; moderators remain responsible for final decisions.
+
 Moderators are responsible for configuring features and action modes appropriately for their communities and reviewing outputs where needed.
 
 ## LLM providers
@@ -30,8 +32,6 @@ The app supports **only** Reddit-approved LLM providers: **Google Gemini** and *
 The app supports configurable action modes. Conservative modes such as Safe Mode, audit-only, report, or modmail escalation are intended for testing and review.
 
 Stronger actions such as content removal require explicit moderator configuration.
-
-The app does not provide or enable live ban automation.
 
 ## Availability
 
