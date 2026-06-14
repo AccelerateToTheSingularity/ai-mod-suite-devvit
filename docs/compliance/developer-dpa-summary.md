@@ -28,7 +28,7 @@ If you transfer personal data internationally, comply with applicable transfer m
 
 | Data | Purpose | Typical retention |
 |------|---------|-------------------|
-| Usernames (`authorName`) | Idempotency, cooldowns, flair, audit | See [privacy-policy.md](../legal/privacy-policy.md) |
+| Usernames (`authorName`) | Idempotency, cooldowns, flair, audit | See [privacy policy](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/privacy/) |
 | Post/comment IDs | Duplicate prevention | ~24 hours (idempotency keys) |
 | Short text snippets | Audit log (≤100 chars) | Last 100 audit entries in Redis |
 | Post/comment body (subset) | Sent to LLM for inference | Not stored long-term by app; held in LLM provider per their policy |

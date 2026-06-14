@@ -44,7 +44,7 @@ This document summarizes provisions that matter for the **AI Mod Suite** Devvit 
 ### 7. Privacy and security
 
 - Comply with the **[Developer DPA](https://www.redditinc.com/policies/developer-dpa)** and applicable privacy laws.
-- Maintain a **privacy policy** describing collection, use, storage, sharing, and deletion — see [privacy-policy.md](../legal/privacy-policy.md).
+- Maintain a **privacy policy** describing collection, use, storage, sharing, and deletion — see [privacy policy](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/privacy/).
 - **Data sharing:** Do not share Reddit data with third parties except as permitted (e.g. approved LLM inference under the privacy policy).
 - **Retention:** Delete Reddit data when no longer needed for stated functionality, on Reddit/user request, or when required by law — see privacy policy retention table.
 - **Security:** Protect Access Info; use reasonable safeguards; notify Reddit of security incidents affecting Reddit data.
@@ -60,7 +60,7 @@ This document summarizes provisions that matter for the **AI Mod Suite** Devvit 
 |-------|-----------|
 | Devvit-only Reddit actions | Yes — no legacy Reddit password OAuth in this port |
 | LLM training | No training pipeline; inference only |
-| Privacy policy / terms | [../legal/](../legal/) |
+| Privacy policy / terms | [Privacy](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/privacy/), [Terms](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/terms/) |
 | Moderator scope | `devvit.json` reddit permission scope: moderator |
 | Safe defaults | `safe_mode` default on; report/modmail/log by default; removal explicit |
 

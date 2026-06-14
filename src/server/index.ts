@@ -72,6 +72,10 @@ function settingsNumber(value: unknown, defaultValue: number): number {
   return Number.isFinite(n) ? n : defaultValue;
 }
 
+function moderationTriggerStatus(action: 'report' | 'remove' | 'modmail' | 'log'): string {
+  return action === 'remove' ? 'ok: removed' : `ok: moderated (${action})`;
+}
+
 /** TLDR summaries always deliver as a public comment when not in safe mode. */
 const TLDR_DELIVERY_MODE = 'comment' as const;
 
@@ -483,6 +487,148 @@ function calculateMilestoneTier(
   return null;
 }
 
+const TROLL_EVAL_COOLDOWN_SEC = 3600;
+
+async function maybeEvaluateTrollAlert(
+  redditClient: any,
+  username: string,
+  subredditName: string,
+  preloaded?: {
+    comments: { body: string; score: number }[];
+    postsCount: number;
+    milestone?: string | null;
+    specialist?: string | null;
+  }
+): Promise<void> {
+  const trollAlertEnabled = settingsFlag(await settings.get('troll_alert_enabled'));
+  if (!trollAlertEnabled) return;
+
+  if (!preloaded) {
+    const evalKey = `troll_eval:${username}`;
+    const recentEval = await redis.get(evalKey);
+    if (recentEval) {
+      console.log(`[ai-mod-suite] Troll alert eval skipped for u/${username}: cooldown active`);
+      return;
+    }
+  }
+
+  let comments: { body: string; score: number }[];
+  let postsCount: number;
+  let milestone: string | null = preloaded?.milestone ?? null;
+  let specialist: string | null = preloaded?.specialist ?? null;
+
+  if (preloaded) {
+    comments = preloaded.comments;
+    postsCount = preloaded.postsCount;
+  } else {
+    const history = await fetchUserLocalHistory(redditClient, username, subredditName, 100);
+    comments = history.comments;
+    postsCount = history.postsCount;
+    const evalKey = `troll_eval:${username}`;
+    await redis.set(evalKey, '1');
+    await redis.expire(evalKey, TROLL_EVAL_COOLDOWN_SEC);
+  }
+
+  const totalSubActivity = comments.length + postsCount;
+  let totalScore = 0;
+  for (const c of comments) {
+    totalScore += c.score;
+  }
+  const averageScore = comments.length > 0 ? totalScore / comments.length : 0;
+
+  const trollMinComments = settingsNumber(await settings.get('troll_min_comments'), 10);
+  const trollAverageScoreThreshold = settingsNumber(
+    await settings.get('troll_average_score_threshold'),
+    -30
+  );
+
+  if (comments.length < trollMinComments || averageScore >= trollAverageScoreThreshold) {
+    return;
+  }
+
+  const alertedKey = `troll_alerted:${username}`;
+  const alreadyAlerted = await redis.get(alertedKey);
+  if (alreadyAlerted) return;
+
+  try {
+    const subredditObj = await redditClient.getCurrentSubreddit();
+    const subId = subredditObj.id;
+
+    const subject = `⚠️ Troll Alert: u/${username}`;
+    const trollMetrics: TrollAlertMetrics = {
+      subredditName,
+      username,
+      averageScore,
+      commentCount: comments.length,
+      totalSubActivity,
+      milestone,
+      specialist,
+    };
+
+    const safeMode = settingsFlag(await settings.get('safe_mode'));
+    let bodyMarkdown = buildTrollModmailBody(trollMetrics);
+    if (!safeMode) {
+      const sortedByScore = [...comments].sort((a, b) => a.score - b.score);
+      const sampleComments = sortedByScore
+        .slice(0, 8)
+        .map((c) => `[score ${c.score}] ${c.body}`);
+      const summary = await resolveModAttentionSummary({
+        kind: 'troll_alert',
+        subredditName,
+        username,
+        metrics: {
+          averageScore,
+          commentCount: comments.length,
+          totalSubActivity,
+          milestone,
+          specialist,
+        },
+        sampleComments,
+      });
+      bodyMarkdown = buildTrollModmailBody(trollMetrics, summary);
+    }
+
+    if (safeMode) {
+      console.log(
+        `[SAFE MODE] Would send Troll Alert modmail for u/${username} (avg score: ${averageScore.toFixed(2)}). Body preview: ${bodyMarkdown.slice(0, 120)}...`
+      );
+      await logAuditEvent({
+        id: `${username}_troll_safe_${Date.now()}`,
+        eventType: 'comment-submit',
+        targetId: username,
+        author: username,
+        textSnippet: `avg=${averageScore.toFixed(2)} n=${comments.length}`,
+        actionTaken: 'safe-mode (troll-alert modmail)',
+        safeMode: true,
+        success: true,
+        message: `Would send troll alert modmail for u/${username}`,
+      });
+    } else {
+      await redditClient.modMail.createModInboxConversation({
+        subject,
+        bodyMarkdown,
+        subredditId: subId as any,
+      });
+      await redis.set(alertedKey, '1');
+      await redis.expire(alertedKey, 86400 * 7);
+      console.log(`[ai-mod-suite] Sent Troll Alert Modmail for u/${username}`);
+      await logAuditEvent({
+        id: `${username}_troll_live_${Date.now()}`,
+        eventType: 'comment-submit',
+        targetId: username,
+        author: username,
+        textSnippet: `avg=${averageScore.toFixed(2)} n=${comments.length}`,
+        actionTaken: 'troll-alert modmail',
+        safeMode: false,
+        success: true,
+        message: `Sent troll alert modmail for u/${username}`,
+      });
+    }
+  } catch (err) {
+    console.error(`[ai-mod-suite] Error sending Troll Alert modmail:`, err);
+  }
+}
+
 async function processUserFlair(
   redditClient: any,
   username: string,
@@ -514,72 +660,12 @@ async function processUserFlair(
   }
   const averageScore = comments.length > 0 ? totalScore / comments.length : 0;
 
-  // Troll Mod Alert check
-  const trollAlertEnabled = await settings.get<boolean>('troll_alert_enabled') ?? false;
-  const trollMinComments = await settings.get<number>('troll_min_comments') ?? 10;
-  const trollAverageScoreThreshold = await settings.get<number>('troll_average_score_threshold') ?? -30;
-
-  if (trollAlertEnabled && comments.length >= trollMinComments && averageScore < trollAverageScoreThreshold) {
-    const alertedKey = `troll_alerted:${username}`;
-    const alreadyAlerted = await redis.get(alertedKey);
-    if (!alreadyAlerted) {
-      try {
-        const subredditObj = await redditClient.getCurrentSubreddit();
-        const subId = subredditObj.id;
-
-        const subject = `⚠️ Troll Alert: u/${username}`;
-        const trollMetrics: TrollAlertMetrics = {
-          subredditName,
-          username,
-          averageScore,
-          commentCount: comments.length,
-          totalSubActivity,
-          milestone,
-          specialist,
-        };
-
-        const safeMode = await settings.get<boolean>('safe_mode') ?? true;
-        let bodyMarkdown = buildTrollModmailBody(trollMetrics);
-        if (!safeMode) {
-          const sortedByScore = [...comments].sort((a, b) => a.score - b.score);
-          const sampleComments = sortedByScore
-            .slice(0, 8)
-            .map((c) => `[score ${c.score}] ${c.body}`);
-          const summary = await resolveModAttentionSummary({
-            kind: 'troll_alert',
-            subredditName,
-            username,
-            metrics: {
-              averageScore,
-              commentCount: comments.length,
-              totalSubActivity,
-              milestone,
-              specialist,
-            },
-            sampleComments,
-          });
-          bodyMarkdown = buildTrollModmailBody(trollMetrics, summary);
-        }
-
-        if (safeMode) {
-          console.log(
-            `[SAFE MODE] Would send Troll Alert modmail for u/${username} (avg score: ${averageScore.toFixed(2)}). Body preview: ${bodyMarkdown.slice(0, 120)}...`
-          );
-        } else {
-          await redditClient.modMail.createModInboxConversation({
-            subject,
-            bodyMarkdown,
-            subredditId: subId as any
-          });
-          await redis.set(alertedKey, '1');
-          await redis.expire(alertedKey, 86400 * 7); // Cooldown of 7 days
-          console.log(`[ai-mod-suite] Sent Troll Alert Modmail for u/${username}`);
-        }
-      } catch (err) {
-        console.error(`[ai-mod-suite] Error sending Troll Alert modmail:`, err);
-      }
-    }
-  }
+  await maybeEvaluateTrollAlert(redditClient, username, subredditName, {
+    comments,
+    postsCount,
+    milestone,
+    specialist,
+  });
 
   return { milestone, specialist, averageScore };
 }
@@ -1010,10 +1096,8 @@ app.post('/internal/triggers/post-submit', async (c) => {
           safeMode,
           moderationAction
         );
-        
-        if (moderationAction === 'remove') {
-          return c.json<TriggerResponse>({ status: 'ok: removed' });
-        }
+
+        return c.json<TriggerResponse>({ status: moderationTriggerStatus(moderationAction) });
       }
     }
 
@@ -1325,10 +1409,44 @@ app.post('/internal/triggers/comment-submit', async (c) => {
           console.error(`[ai-mod-suite] Discussion summary failed on post ${postId}:`, err);
         }
       }
+      if (settingsFlag(await settings.get('troll_alert_enabled'))) {
+        try {
+          await maybeEvaluateTrollAlert(reddit, authorName, subName);
+        } catch (err) {
+          console.error(`[ai-mod-suite] Troll alert eval failed for u/${authorName}:`, err);
+        }
+      }
       return c.json<TriggerResponse>(response);
     };
 
-    // Summons first — user-facing; must not run behind discussion-summary LLM (trigger timeout)
+    // AI moderation before summons/TLDR/conversational replies so violating content is not answered
+    const aiModerationEnabled = settingsFlag(await settings.get('ai_moderation_enabled'));
+    if (aiModerationEnabled) {
+      const rulesPrompt = await settings.get<string>('moderation_prompt') ?? '';
+      const moderationAction = getSingleSettingValue(
+        await settings.get('moderation_action'),
+        'report'
+      ) as 'report' | 'remove' | 'modmail' | 'log';
+
+      console.log(`[ai-mod-suite] Running AI Moderation check for comment ${commentId}...`);
+      const moderationResult = await evaluateContentForViolation(textBody, rulesPrompt);
+      if (moderationResult && moderationResult.violates) {
+        console.log(`[ai-mod-suite] Comment ${commentId} violates rules: ${moderationResult.reason}`);
+        await handleModerationAction(
+          'comment-submit',
+          commentId,
+          authorName,
+          textBody,
+          moderationResult.reason,
+          safeMode,
+          moderationAction
+        );
+
+        return completeCommentSubmit({ status: moderationTriggerStatus(moderationAction) });
+      }
+    }
+
+    // Summons before TLDR / discussion-summary work (user-facing; avoid trigger timeout on slow paths)
     if (aiSummonsEnabled && isSummon(textBody)) {
       if (isHostileSummon(textBody)) {
         console.log(`[ai-mod-suite] Skipping hostile summon from u/${authorName}`);
@@ -1348,32 +1466,6 @@ app.post('/internal/triggers/comment-submit', async (c) => {
       });
       if (summonHandled) {
         return completeCommentSubmit({ status: 'ok: summon reply' });
-      }
-    }
-
-    // Run AI Moderation Check
-    const aiModerationEnabled = settingsFlag(await settings.get('ai_moderation_enabled'));
-    if (aiModerationEnabled) {
-      const rulesPrompt = await settings.get<string>('moderation_prompt') ?? '';
-      const moderationAction = (await settings.get<string>('moderation_action') ?? 'report') as 'report' | 'remove' | 'modmail' | 'log';
-      
-      console.log(`[ai-mod-suite] Running AI Moderation check for comment ${commentId}...`);
-      const moderationResult = await evaluateContentForViolation(textBody, rulesPrompt);
-      if (moderationResult && moderationResult.violates) {
-        console.log(`[ai-mod-suite] Comment ${commentId} violates rules: ${moderationResult.reason}`);
-        await handleModerationAction(
-          'comment-submit',
-          commentId,
-          authorName,
-          textBody,
-          moderationResult.reason,
-          safeMode,
-          moderationAction
-        );
-        
-        if (moderationAction === 'remove') {
-          return completeCommentSubmit({ status: 'ok: removed' });
-        }
       }
     }
 

@@ -296,7 +296,7 @@
       "troll_alert_enabled": {
         "type": "boolean",
         "label": "Troll Alerts | Enable Troll Alerts",
-        "helpText": "Send modmail if the user's average comment score in the sub is below the threshold.",
+        "helpText": "When enabled, evaluates each commenter's local comment scores (throttled to once per hour per user). Sends modmail if average score is below the threshold and minimum comment count is met. Independent of the Flair System.",
         "defaultValue": false
       },
       "troll_min_comments": {

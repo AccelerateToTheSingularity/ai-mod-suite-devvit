@@ -1,6 +1,7 @@
 {
   "name": "ai-mod-suite-bot",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "build": "esbuild src/server/index.ts --bundle --platform=node --target=node22 --outfile=dist/server/index.js --format=cjs",
@@ -19,5 +20,5 @@
     "esbuild": "^0.28.0",
     "typescript": "^5.4.0"
   },
-  "license": "AGPL-3.0-or-later"
+  "license": "BSD-3-Clause"
 }

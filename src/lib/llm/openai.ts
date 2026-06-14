@@ -17,7 +17,8 @@ export async function completeTextOpenAI(
       body: JSON.stringify({
         model,
         messages: [{ role: 'user', content: prompt }],
-        max_tokens: opts.maxOutputTokens ?? 200,
+        // GPT-5.x / reasoning models reject max_tokens; use max_completion_tokens (includes reasoning tokens).
+        max_completion_tokens: opts.maxOutputTokens ?? 200,
         temperature: opts.temperature ?? 0.3,
       }),
     });
@@ -28,9 +29,26 @@ export async function completeTextOpenAI(
     }
 
     const data = (await res.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
+      choices?: Array<{
+        finish_reason?: string;
+        message?: { content?: string | null; refusal?: string };
+      }>;
+      usage?: unknown;
     };
-    return data.choices?.[0]?.message?.content?.trim() ?? null;
+    const choice = data.choices?.[0];
+    const content = choice?.message?.content?.trim() ?? '';
+    if (content) return content;
+
+    const refusal = choice?.message?.refusal?.trim();
+    if (refusal) {
+      console.error(`[ai-mod-suite] LLM (OpenAI) refusal: ${refusal}`);
+      return null;
+    }
+
+    console.error(
+      `[ai-mod-suite] LLM (OpenAI) empty message content (model=${model}, finish_reason=${choice?.finish_reason ?? 'unknown'}, usage=${JSON.stringify(data.usage)})`
+    );
+    return null;
   } catch (err) {
     console.error('[ai-mod-suite] LLM (OpenAI) fetch failed:', err);
     return null;

@@ -8,7 +8,7 @@ The swiss-army-knife of AI mod tools for Devvit. It handles what normally takes 
 - **Discussion digests**: milestone-based digest posted and updated as a thread grows (e.g. at 20, 50, 100 comments).
 - **AI summons**: `!bot`, `hey bot`, `mod bot`, or `ai bot` summons with bounded AI replies and optional follow-up conversations.
 - **Reputation flairs**: contribution milestone flairs and AI-assigned specialist labels like `Resource Finder` or `Frequent Answerer`.
-- **Troll-alert modmail**: conservative early-warning modmail on low local scores.
+- **Troll-alert modmail**: conservative early-warning modmail when local comment scores fall below a threshold (standalone; independent of the flair system).
 - **Safe mode on by default**: dry-run everything before live writes. Redis-backed audit logs, duplicate prevention, cooldowns, and milestone state.
 
 Moderation load is a combination of how big your queue is, and how much context each item requires. AI Mod Suite addresses both. Every item in a modqueue needs to be read, understood, and judged before you can act. AI Mod Suite makes that faster, easier and automated.

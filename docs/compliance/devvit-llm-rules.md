@@ -35,8 +35,8 @@ Your Devvit app must:
 | Rule | How we comply |
 |------|----------------|
 | Approved LLM only | `LLM \| Provider` install setting: `gemini` or `openai` only; optional mod-supplied API key; HTTP allowlist: `generativelanguage.googleapis.com`, `api.openai.com` |
-| No training on Reddit data | Inference-only API calls; no datasets or fine-tuning; stated in [privacy policy](../legal/privacy-policy.md) |
-| Terms + privacy | [terms-of-service.md](../legal/terms-of-service.md), [privacy-policy.md](../legal/privacy-policy.md) |
+| No training on Reddit data | Inference-only API calls; no datasets or fine-tuning; stated in [privacy policy](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/privacy/) |
+| Terms + privacy | [Terms](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/terms/), [Privacy](https://acceleratetothesingularity.github.io/ai-mod-suite-devvit/privacy/) |
 | Benefit | Moderator/community summaries, summons, triage, flair on installed subreddits |
 
 Reddit may update approved LLMs at any time. Monitor the [official Devvit Rules](https://developers.reddit.com/docs/devvit_rules) before each release.
