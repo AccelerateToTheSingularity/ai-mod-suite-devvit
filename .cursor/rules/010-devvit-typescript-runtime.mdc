@@ -1,0 +1,21 @@
+---
+description: Devvit, TypeScript, Hono, package-script, build, playtest, and upload rules for AI Mod Suite.
+globs: ["src/**/*.ts", "devvit.json", "package.json", "tsconfig.json", "docs/**/*.md", "README.md"]
+alwaysApply: false
+---
+
+# Devvit / TypeScript runtime
+
+Use existing npm scripts:
+
+```powershell
+npm run build
+npm run type-check
+npm run dev
+npm run upload
+```
+
+`npm run upload` is an intentional Devvit automation when the task is to publish or refresh the app.
+Before changing upload behavior, confirm `devvit.json`, app identity, and target environment.
+
+For Devvit API changes, use current docs and check existing compliance docs before editing.

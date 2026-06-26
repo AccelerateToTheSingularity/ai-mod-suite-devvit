@@ -1,0 +1,19 @@
+---
+description: Moderation, privacy, AI provider, Redis audit, and safe-mode boundaries for AI Mod Suite.
+globs: ["src/**/*.ts", "devvit.json", "docs/**/*.md", "README.md"]
+alwaysApply: false
+---
+
+# Moderation and privacy boundaries
+
+This app can take moderation actions, send modmail, summarize content, update flairs, and call moderator-configured AI providers.
+
+Preserve the documented safety model:
+
+- Safe mode defaults on.
+- Live removal requires moderator opt-in with safe mode off.
+- Redis audit logs record proposed and completed actions.
+- Redis idempotency prevents duplicate trigger actions.
+
+Do not copy subreddit-specific secrets, moderation policy, or API credentials into reusable templates.
+When changing user-facing moderation behavior, keep auditability and duplicate prevention intact.

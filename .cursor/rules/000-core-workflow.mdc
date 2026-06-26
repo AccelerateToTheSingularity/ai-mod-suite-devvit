@@ -1,0 +1,22 @@
+---
+description: Always-on workflow, moderation automation posture, and Devvit project map for AI Mod Suite.
+globs: []
+alwaysApply: true
+---
+
+# Core workflow
+
+This repo is a Devvit moderation app.
+Preserve useful automation for build, type-check, playtest, upload, scheduler, triggers, Redis audit logs, and moderation workflows.
+
+Core facts:
+
+- Package: `ai-mod-suite-bot`
+- Runtime: Devvit `0.12.24`, TypeScript, Hono
+- App config: `devvit.json`
+- Source: `src/`
+- Build output: `dist/server/index.js`
+- User docs: `README.md`, `docs/`
+
+Do not treat upload, moderation actions, or external API calls as bad by default.
+Review them for correct target, safe-mode behavior, idempotency, audit logging, and current Devvit API usage.

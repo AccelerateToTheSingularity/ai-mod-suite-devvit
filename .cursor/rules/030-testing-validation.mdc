@@ -1,0 +1,19 @@
+---
+description: Build, type-check, Devvit playtest, upload, and moderation regression validation for AI Mod Suite.
+globs: ["src/**/*.ts", "devvit.json", "package.json", "docs/**/*.md", "README.md"]
+alwaysApply: false
+---
+
+# Testing and validation
+
+Use package scripts based on the touched surface:
+
+```powershell
+npm run type-check
+npm run build
+npm run dev
+npm run upload
+```
+
+For moderation behavior, validate safe-mode defaults, audit-log writes, idempotency keys, cooldowns, and target action routing.
+For upload/publish work, preserve the automation and verify the Devvit command output rather than replacing it with manual steps.
